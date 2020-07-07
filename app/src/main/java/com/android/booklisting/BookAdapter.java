@@ -50,7 +50,7 @@ class BookAdapter extends ArrayAdapter<Book> {
         priceTextView.setText(formatPrice(price));
 
         TextView currencyCodeTextView = listItemView.findViewById(R.id.currency_code);
-        String currencyCode = currentBook.getLanguage();
+        String currencyCode = currentBook.getCurrency();
         currencyCodeTextView.setText(currencyCode);
 
         ImageView bookCover = listItemView.findViewById(R.id.book_cover);

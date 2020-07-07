@@ -91,14 +91,15 @@ final class QueryUtils {
         try {
             JSONObject baseJsonResponse = new JSONObject(bookJson);
             JSONArray booksArray = baseJsonResponse.getJSONArray("items");
+            Log.println(Log.INFO, LOG_TAG, String.valueOf(booksArray.length()));
 
             for (int i = 0; i < booksArray.length(); i++) {
                 JSONObject currentBook = booksArray.getJSONObject(i);
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
                 String title = volumeInfo.getString("title");
                 String language = volumeInfo.getString("language");
-                String author;
 
+                String author;
                 if (volumeInfo.has("authors")) {
                     JSONArray authors = volumeInfo.getJSONArray("authors");
                     if (!volumeInfo.isNull("authors")) author = (String) authors.get(0);
@@ -108,11 +109,21 @@ final class QueryUtils {
                 JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
                 String coverImageUrl = imageLinks.getString("smallThumbnail");
 
+                double price = 0;
+                String currency;
                 JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
-                JSONObject retailPrice = saleInfo.getJSONObject("retailPrice");
-                double price = retailPrice.getDouble("amount");
-                String currency = retailPrice.getString("currencyCode");
-                String buyLink = saleInfo.getString("buyLink");
+                if (saleInfo.has("retailPrice")) {
+                    JSONObject retailPrice = saleInfo.getJSONObject("retailPrice");
+                    price = retailPrice.getDouble("amount");
+                    currency = retailPrice.getString("currencyCode");
+                } else {
+                    currency = "Not for sale";
+                }
+
+                String buyLink = "";
+                if (saleInfo.has("buyLink")) {
+                    buyLink = saleInfo.getString("buyLink");
+                }
 
                 Book book = new Book(title, language, author, coverImageUrl, price, currency, buyLink);
                 books.add(book);
