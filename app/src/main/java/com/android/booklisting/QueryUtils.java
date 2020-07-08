@@ -120,7 +120,7 @@ final class QueryUtils {
                     currency = "Not for sale";
                 }
 
-                String buyLink = "";
+                String buyLink = null;
                 if (saleInfo.has("buyLink")) {
                     buyLink = saleInfo.getString("buyLink");
                 }

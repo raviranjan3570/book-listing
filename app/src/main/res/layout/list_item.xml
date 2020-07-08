@@ -18,9 +18,9 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/layout_margin"
         android:layout_marginEnd="@dimen/layout_margin"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -51,8 +51,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/layout_margin"
+        android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/layout_margin"
         android:orientation="vertical">
 
@@ -60,8 +60,8 @@
             android:id="@+id/language_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             android:textAllCaps="true"
+            android:layout_gravity="end"
             android:textSize="@dimen/country_code_text_size"
             tools:text="EN" />
 
@@ -83,6 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8dp"
+                android:textStyle="bold"
                 android:textColor="@android:color/holo_red_light"
                 tools:text="INR" />
 

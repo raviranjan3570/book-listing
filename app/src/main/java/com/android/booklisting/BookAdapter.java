@@ -48,6 +48,7 @@ class BookAdapter extends ArrayAdapter<Book> {
         TextView priceTextView = listItemView.findViewById(R.id.book_price);
         double price = currentBook.getPrice();
         priceTextView.setText(formatPrice(price));
+        if (price == 0) priceTextView.setVisibility(View.INVISIBLE);
 
         TextView currencyCodeTextView = listItemView.findViewById(R.id.currency_code);
         String currencyCode = currentBook.getCurrency();
