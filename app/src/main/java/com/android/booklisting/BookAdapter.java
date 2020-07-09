@@ -11,13 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 class BookAdapter extends ArrayAdapter<Book> {
 
+    private Context mContext;
+
     public BookAdapter(@NonNull Context context, ArrayList<Book> books) {
         super(context, 0, books);
+        mContext = context;
     }
 
     @NonNull
@@ -54,9 +59,9 @@ class BookAdapter extends ArrayAdapter<Book> {
         String currencyCode = currentBook.getCurrency();
         currencyCodeTextView.setText(currencyCode);
 
+        String imageUrl = currentBook.getImageResourceUrl();
         ImageView bookCover = listItemView.findViewById(R.id.book_cover);
-        bookCover.setImageResource(R.drawable.ic_baseline_search_24);
-
+        Glide.with(mContext).load(imageUrl).into(bookCover);
         return listItemView;
     }
 

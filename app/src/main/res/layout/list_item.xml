@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/book_cover"
         android:layout_width="@dimen/cover_width"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/listPreferredItemHeight"
         android:contentDescription="@string/book_cover_image_view_desc"
         android:scaleType="fitXY"
         tools:src="@mipmap/ic_launcher" />
