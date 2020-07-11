@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
+        assert searchManager != null;
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         return true;
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (books != null && !books.isEmpty()) mAdapter.addAll(books);
         mGettingBook.setVisibility(View.GONE);
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
