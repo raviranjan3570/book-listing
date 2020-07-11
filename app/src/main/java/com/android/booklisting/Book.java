@@ -4,25 +4,25 @@ class Book {
 
     private String title;
     private String author;
-    private String language;
+    private double rating;
     private double price;
     private String imageResourceUrl;
-    private String currency;
+    private int index;
     private String buyLink;
 
-    public Book(String title, String language, String author, String imageResourceUrl,
-                double price, String currency, String buyLink) {
+    public Book(String title, double rating, String author, String imageResourceUrl,
+                double price, int index, String buyLink) {
         this.title = title;
         this.author = author;
-        this.language = language;
+        this.rating = rating;
         this.price = price;
         this.imageResourceUrl = imageResourceUrl;
-        this.currency = currency;
+        this.index = index;
         this.buyLink = buyLink;
     }
 
-    public String getCurrency() {
-        return currency;
+    public int getIndex() {
+        return index;
     }
 
     public String getBuyLink() {
@@ -37,8 +37,8 @@ class Book {
         return author;
     }
 
-    public String getLanguage() {
-        return language;
+    public double getRating() {
+        return rating;
     }
 
     public double getPrice() {
@@ -48,4 +48,5 @@ class Book {
     public String getImageResourceUrl() {
         return imageResourceUrl;
     }
+
 }

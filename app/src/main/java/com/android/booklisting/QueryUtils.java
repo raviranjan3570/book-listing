@@ -97,7 +97,11 @@ final class QueryUtils {
                 JSONObject currentBook = booksArray.getJSONObject(i);
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
                 String title = volumeInfo.getString("title");
-                String language = volumeInfo.getString("language");
+
+                double rating = 3.0;
+                if (volumeInfo.has("averageRating")) {
+                    rating = volumeInfo.getDouble("averageRating");
+                }
 
                 String author;
                 if (volumeInfo.has("authors")) {
@@ -107,17 +111,13 @@ final class QueryUtils {
                 } else author = "missing info about author";
 
                 JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String coverImageUrl = imageLinks.getString("smallThumbnail");
+                String coverImageUrl = imageLinks.getString("thumbnail");
 
                 double price = 0;
-                String currency;
                 JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
                 if (saleInfo.has("retailPrice")) {
                     JSONObject retailPrice = saleInfo.getJSONObject("retailPrice");
                     price = retailPrice.getDouble("amount");
-                    currency = retailPrice.getString("currencyCode");
-                } else {
-                    currency = "Not for sale";
                 }
 
                 String buyLink = null;
@@ -125,7 +125,7 @@ final class QueryUtils {
                     buyLink = saleInfo.getString("buyLink");
                 }
 
-                Book book = new Book(title, language, author, coverImageUrl, price, currency, buyLink);
+                Book book = new Book(title, rating, author, coverImageUrl, price, i + 1, buyLink);
                 books.add(book);
             }
         } catch (JSONException e) {

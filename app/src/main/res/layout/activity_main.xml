@@ -7,7 +7,11 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="@dimen/margin_8dp"
+        android:divider="@null"
+        android:dividerHeight="16dp" />
 
     <ProgressBar
         android:id="@+id/loading_spinner"

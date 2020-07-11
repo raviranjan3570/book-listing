@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +29,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int BOOK_LOADER_ID = 1;
     private static final String GOOGLE_BOOK_REQUEST_URL = "https://www.googleapis.com/books/v1/volumes";
     private BookAdapter mAdapter;
-    LoaderManager loaderManager = getLoaderManager();
+    private LoaderManager loaderManager = getLoaderManager();
     private String query;
     private TextView mEmptyTextView;
     private View mGettingBook;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
-        ListView listView = findViewById(R.id.list_view);
+        listView = findViewById(R.id.list_view);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Book currentBook = mAdapter.getItem(i);
+                assert currentBook != null;
+                if (currentBook.getBuyLink() != null) {
+                    Uri bookUri = Uri.parse(currentBook.getBuyLink());
+                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    CustomTabsIntent customTabsIntent = builder.build();
+                    customTabsIntent.launchUrl(MainActivity.this, bookUri);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Book is not available.", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        });
         mAdapter = new BookAdapter(this, new ArrayList<Book>());
         listView.setAdapter(mAdapter);
         mEmptyTextView = findViewById(R.id.empty_view);
@@ -58,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            mGettingBook.setVisibility(View.VISIBLE);
+            mEmptyTextView.setVisibility(View.GONE);
             query = intent.getStringExtra(SearchManager.QUERY);
             if (!getSupportLoaderManager().hasRunningLoaders()) {
                 loaderManager.initLoader(BOOK_LOADER_ID, null, this);
@@ -84,21 +104,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<Book>> onCreateLoader(int i, Bundle bundle) {
 
+        listView.setVisibility(View.GONE);
+        mGettingBook.setVisibility(View.VISIBLE);
         Uri baseUri = Uri.parse(GOOGLE_BOOK_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         uriBuilder.appendQueryParameter("q", query);
-        uriBuilder.appendQueryParameter("maxResults", "20");
+        uriBuilder.appendQueryParameter("maxResults", "9");
 
         return new BookLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> books) {
-        mEmptyTextView.setText(R.string.no_books_found);
         mAdapter.clear();
         if (books != null && !books.isEmpty()) mAdapter.addAll(books);
         mGettingBook.setVisibility(View.GONE);
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
+        if (isConnected) {
+            mEmptyTextView.setText(R.string.no_books_found);
+        } else {
+            mEmptyTextView.setText(R.string.no_internet);
+        }
     }
 
     @Override

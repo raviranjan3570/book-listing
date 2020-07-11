@@ -1,5 +1,6 @@
 package com.android.booklisting;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ class BookAdapter extends ArrayAdapter<Book> {
         mContext = context;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -38,6 +40,10 @@ class BookAdapter extends ArrayAdapter<Book> {
         Book currentBook = getItem(position);
         assert currentBook != null;
 
+        TextView indexTextView = listItemView.findViewById(R.id.book_index);
+        int index = currentBook.getIndex();
+        indexTextView.setText(Integer.toString(index));
+
         TextView authorTextView = listItemView.findViewById(R.id.author_name);
         String author_name = currentBook.getAuthor();
         authorTextView.setText(author_name);
@@ -46,18 +52,19 @@ class BookAdapter extends ArrayAdapter<Book> {
         String book_title = currentBook.getTitle();
         bookTitleTextView.setText(book_title);
 
-        TextView languageCodeTextView = listItemView.findViewById(R.id.language_code);
-        String languageCode = currentBook.getLanguage();
-        languageCodeTextView.setText(languageCode);
+        TextView ratingTextView = listItemView.findViewById(R.id.rating);
+        String rating = formatRating(currentBook.getRating());
+        ratingTextView.setText(rating);
 
         TextView priceTextView = listItemView.findViewById(R.id.book_price);
         double price = currentBook.getPrice();
-        priceTextView.setText(formatPrice(price));
-        if (price == 0) priceTextView.setVisibility(View.INVISIBLE);
-
-        TextView currencyCodeTextView = listItemView.findViewById(R.id.currency_code);
-        String currencyCode = currentBook.getCurrency();
-        currencyCodeTextView.setText(currencyCode);
+        if (price == 0) {
+            priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            priceTextView.setText(R.string.not_for_sale);
+        } else {
+            String priceWithCurrencyCode = formatPrice(price) + " ";
+            priceTextView.setText(priceWithCurrencyCode);
+        }
 
         String imageUrl = currentBook.getImageResourceUrl();
         ImageView bookCover = listItemView.findViewById(R.id.book_cover);
@@ -68,5 +75,10 @@ class BookAdapter extends ArrayAdapter<Book> {
     private String formatPrice(double bookPrice) {
         DecimalFormat priceFormat = new DecimalFormat("0.00");
         return priceFormat.format(bookPrice);
+    }
+
+    private String formatRating(double bookRating) {
+        DecimalFormat ratingFormat = new DecimalFormat("0.0");
+        return ratingFormat.format(bookRating);
     }
 }

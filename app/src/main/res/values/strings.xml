@@ -6,4 +6,6 @@
     <string name="no_books_found">No books found.</string>
     <string name="no_books">Search for books.</string>
     <string name="no_internet">No internet connection.</string>
+    <string name="not_for_sale">Not for sale</string>
+    <string name="Rs">\u20B9</string>
 </resources>
